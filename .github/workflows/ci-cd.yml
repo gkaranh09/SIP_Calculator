@@ -25,4 +25,5 @@ jobs:
 
       - name: Run Tests
         run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/src  # Ensures `src/` is recognized
           pytest tests/
