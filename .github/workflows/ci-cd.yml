@@ -20,10 +20,25 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Verify Directory Structure
-        run: ls -R  # Debugging step to check files and directories
-
       - name: Run Tests
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/src  # Ensures `src/` is recognized
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           pytest tests/
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy Static Page
+        run: |
+          mkdir -p public
+          cp templates/index.html public/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
