@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from sip_calculator import calculate_sip
+from calculate_sip import calculate_sip
 
 app = Flask(__name__, template_folder="../templates")
 
