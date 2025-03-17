@@ -20,29 +20,9 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Set PYTHONPATH and Run Tests
+      - name: Verify Directory Structure
+        run: ls -R  # Debugging step to check files and directories
+
+      - name: Run Tests
         run: |
-          echo "PYTHONPATH=$(pwd)/src" >> $GITHUB_ENV
           pytest tests/
-  
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Deploy Static Page
-        run: |
-          mkdir -p public
-          cp templates/index.html public/
-          echo "SIP Calculator Deployed!" > public/index.html
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
