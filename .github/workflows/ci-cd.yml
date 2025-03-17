@@ -21,26 +21,6 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Tests
-        run: pytest tests/
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Deploy Static Page
         run: |
-          mkdir -p public
-          cp templates/index.html public/
-          echo "SIP Calculator Deployed!" > public/index.html
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          export PYTHONPATH=src
+          pytest tests/
