@@ -1,5 +1,5 @@
 import unittest
-from src.sip_calculator import calculate_sip
+from src import calculate_sip
 
 class TestSIPCalculator(unittest.TestCase):
     def test_sip_calculation(self):
