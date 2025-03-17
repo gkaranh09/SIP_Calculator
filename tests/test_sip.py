@@ -6,7 +6,7 @@ import os
 # Ensure the `src` directory is in the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from tests.test_sip import calculate_sip  # Correct import path
+from src.calculate_sip import calculate_sip  # Correct import path
 
 class TestSIPCalculator(unittest.TestCase):
     def test_sip_calculation(self):
