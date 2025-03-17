@@ -1,4 +1,4 @@
-name: CI/CD for SIP Calculator
+name: Deploy to Render
 
 on:
   push:
@@ -6,10 +6,11 @@ on:
       - main
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -17,28 +18,16 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Run tests
+        run: pytest tests/
+
+      - name: Deploy to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          pytest tests/
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Deploy Static Page
-        run: |
-          mkdir -p public
-          cp templates/index.html public/index.html
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.SIP_TOKEN }}
-          publish_dir: ./public
+          curl -X POST "https://api.render.com/v1/services/YOUR_RENDER_SERVICE_ID/deploys" \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json"
